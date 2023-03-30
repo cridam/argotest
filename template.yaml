@@ -1,0 +1,327 @@
+a secure context detected on your platform, you must give a token
+if you know this secure context can be skipped, use --prompt=false
+Enter secure token:
+---
+# Source: dex/charts/dex/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: dex
+  labels:
+    helm.sh/chart: dex-0.12.1
+    app.kubernetes.io/name: dex
+    app.kubernetes.io/instance: dex
+    app.kubernetes.io/version: "2.35.3"
+    app.kubernetes.io/managed-by: Helm
+---
+# Source: dex/charts/basic/templates/secret-callback.yaml
+apiVersion: v1
+stringData:
+  auth: |
+    sysadmin:$2a$10$x3701VFmn3e8JI5jR.EZtu/.peMKHpWzRcx.vu/qIWgrq3gNAtYSW
+    sysauditor:$2a$10$NXcFayNNyVxo4EivfDskkuYqs1j3TASFqw31ejvZMlXGM9gX7QYN.
+    operator:$2a$10$uqvPC.Ltg4WgjG9s7MhfM.UT9YyJqTTHShPes8j9O1ak9KfY2kru2
+    maintainer:$2a$10$K61eMB3bMQmQJvAHEcog6u7QyCYH41o3RkzARDh24RWMRoy9TWQbS
+
+kind: Secret
+metadata:
+  name: dex-basic-secret
+type: Opaque
+---
+# Source: dex/charts/dex/templates/secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: dex
+  labels:
+    helm.sh/chart: dex-0.12.1
+    app.kubernetes.io/name: dex
+    app.kubernetes.io/instance: dex
+    app.kubernetes.io/version: "2.35.3"
+    app.kubernetes.io/managed-by: Helm
+type: Opaque
+data:
+  config.yaml: "Y29ubmVjdG9yczoKLSBpZDogbG9naW4KICBuYW1lOiBsb2dpbgogIHR5cGU6IGF1dGhwcm94eQplbmFibGVQYXNzd29yZERCOiBmYWxzZQppc3N1ZXI6IGh0dHBzOi8vYXV0aC5rYXN0LndpcC9hdXRoL3JlYWxtcy9rYXN0CmxvZ2dlcjoKICBmb3JtYXQ6IGpzb24Kb2F1dGgyOgogIHJlc3BvbnNlVHlwZXM6CiAgLSBjb2RlCiAgLSB0b2tlbgogIC0gaWRfdG9rZW4KICBza2lwQXBwcm92YWxTY3JlZW46IHRydWUKc3RhdGljQ2xpZW50czoKLSBpZDogZ3JhZmFuYQogIG5hbWU6IGdyYWZhbmEKICByZWRpcmVjdFVSSXM6CiAgLSBodHRwczovL2dyYWZhbmEuYWRtaW4ua2FzdC53aXAvbG9naW4vZ2VuZXJpY19vYXV0aAogIHNlY3JldDogZ2Z2YmgzNDU2N29rIQpzdG9yYWdlOgogIGNvbmZpZzoKICAgIGluQ2x1c3RlcjogdHJ1ZQogIHR5cGU6IGt1YmVybmV0ZXMKd2ViOgogIGh0dHA6IDAuMC4wLjA6NTU1NgogIGh0dHBzOiAwLjAuMC4wOjU1NTQKICB0bHNDZXJ0OiAvZXRjL2RleC90bHMvdGxzLmNydAogIHRsc0tleTogL2V0Yy9kZXgvdGxzL3Rscy5rZXk="
+---
+# Source: dex/templates/tls-secrets.yaml
+apiVersion: v1
+data:
+  tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURpekNDQW5PZ0F3SUJBZ0lKQU5sNnpJeStxeU1GTUEwR0NTcUdTSWIzRFFFQkN3VUFNRnN4Q3pBSkJnTlYKQkFZVEFrWlNNUXd3Q2dZRFZRUUlEQU5KUkVZeEREQUtCZ05WQkFjTUExWk1XakVVTUJJR0ExVUVDZ3dMVkdoaApiR1Z6WjNKdmRYQXhEREFLQmdOVkJBc01BMU5KV0RFTU1Bb0dBMVVFQXd3RFpHVjRNQjRYRFRJeU1EY3dOekV3Ck1UazBPVm9YRFRJek1EY3dOekV3TVRrME9Wb3dXekVMTUFrR0ExVUVCaE1DUmxJeEREQUtCZ05WQkFnTUEwbEUKUmpFTU1Bb0dBMVVFQnd3RFZreGFNUlF3RWdZRFZRUUtEQXRVYUdGc1pYTm5jbTkxY0RFTU1Bb0dBMVVFQ3d3RApVMGxZTVF3d0NnWURWUVFEREFOa1pYZ3dnZ0VpTUEwR0NTcUdTSWIzRFFFQkFRVUFBNElCRHdBd2dnRUtBb0lCCkFRQzVRYlpPdWpMYjR4bTcyTlFETGs1M1BTR1NtQnM2ZExRR1FqalljMitkbk83MEdJYTdPM2ZIQXRNSGE2TUoKY2VrOHQyZ3drUTRYS2hZUWU0NXlydkdlQWM3dnJlVFVYVndXZWh2Y1pDSDFUU3VIcXpYMnVnOTdadEppNU1TYgpDdGVYcWs0VDhlcmVoblYyWSsxVjQyaHRPRmdyd0JoSk1YMWlDdnlRanh0Z1l0WWkxU2lxcFAyNlo1bWcxTUM2CjgwK1BqRk84QnI1RG54Z085ekpVRE1BeWU5SmRVMHQwTElGTUpPWUs0SUhiWkhYRW9KbWNMemIzeUJsNkU3OTMKaE1Oa1JpblRNT0Y5OEVaSWRBdWJFN1RvM3VYc3pSMzltbitRbXQ4TC92a1NxRXdsSzlrL0hmOEo5aElxNVd1Zgo0cjVZdC9LRW5YYUJGWXRNUVBSK0hKTWRBZ01CQUFHalVqQlFNQXNHQTFVZER3UUVBd0lFTURBVEJnTlZIU1VFCkREQUtCZ2dyQmdFRkJRY0RBVEFzQmdOVkhSRUVKVEFqZ2cxaGRYUm9MbXRoYzNRdWQybHdnaEprWlhndVlYVjAKYUdWdWRHbGpZWFJwYjI0d0RRWUpLb1pJaHZjTkFRRUxCUUFEZ2dFQkFMSkYwRGV5bU5RQ3BMYUp5N1pBOTlObwpQdE42ZHppY1JlUHFpRllJbWRMdUNlT3kwNXpIaFJHMDd5UXhZalY3aC9wbHJUaGVjc3VicC9PRXdOZ3lrWGxsCitFN3BwK2VOMFpSL0dUQnJuNWpYNjd0TFVwL3dTY1lBYnFoaUxmR0U0aVVxRlp0aXlUUi9tbS8zZXF0K214WisKTnJsYUNQVm82S1dlUmIzUHNxWGIvSXFTRGI4VWx4Rk9hQytkSENkQnd3QlJmN09rejJEaFk3Q1Bpa0Q0Z0xZMwpjL3d0aWlmTUxvbHFaZ0lmUFVFblVGQnZFMGlQMUVJTExYNFF2SnRxblhFR2ZGUTFoYUgvL3MzSWlmN3BCa05ECnhBQVBzOE13a241N2FYM29XZlhUT3dyT0Z1cXJaa3ltMW9NY0pNM29UVS9TNk93Nk9BdFA2aUtSajB0ZEMwcz0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+  tls.key: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUV2d0lCQURBTkJna3Foa2lHOXcwQkFRRUZBQVNDQktrd2dnU2xBZ0VBQW9JQkFRQzVRYlpPdWpMYjR4bTcKMk5RRExrNTNQU0dTbUJzNmRMUUdRampZYzIrZG5PNzBHSWE3TzNmSEF0TUhhNk1KY2VrOHQyZ3drUTRYS2hZUQplNDV5cnZHZUFjN3ZyZVRVWFZ3V2VodmNaQ0gxVFN1SHF6WDJ1Zzk3WnRKaTVNU2JDdGVYcWs0VDhlcmVoblYyClkrMVY0Mmh0T0ZncndCaEpNWDFpQ3Z5UWp4dGdZdFlpMVNpcXBQMjZaNW1nMU1DNjgwK1BqRk84QnI1RG54Z08KOXpKVURNQXllOUpkVTB0MExJRk1KT1lLNElIYlpIWEVvSm1jTHpiM3lCbDZFNzkzaE1Oa1JpblRNT0Y5OEVaSQpkQXViRTdUbzN1WHN6UjM5bW4rUW10OEwvdmtTcUV3bEs5ay9IZjhKOWhJcTVXdWY0cjVZdC9LRW5YYUJGWXRNClFQUitISk1kQWdNQkFBRUNnZ0VBTlFZdjdoeXhUZXFVaFFXc3VUUloxUnMwTHNkR2s5YXZhRk12L2hRY1VGcUkKc21rS3R6QndPZy8rNHRMV0dXLzNPQit1dktmb0JvMVBQMng5K3lsRGt0d2xwTWg3QktXc0krclRhcU5tYk5XbgpyZTg5Uk45QWF5dWs4QlZXaUtIenp6ODVsYy9hVDlMZ2NBQnQvL1ZWQUYzdUxxZU95L1JVVk9tY0hLdzVRNzdKCkFOT2dSQXR6bWcrdTB5Tmpjei9qSVZVZ1RveTZydUpWQ3lXK3hUVWlxSmRtY1dnZjMvM20rNWVZcG96L1V6SXoKRDJSTGRmelRSb0lMcUtSM0p3SU1nZTJPTGV2dUdCaXhwQlc4VkZDMjF0YlhRVlhLZHdZRVMxdWZFYVdXWEJrLwpLa3FVWU1mMHlzbmIzRC84QjgxVnYrdUpRaTNkTUt3WHZrZ3hYT09TZ1FLQmdRRHhvOGtTTlgrU0lRN3QxRkx6CjZ1eXlBTXJkRjBROFFRenRnVklsWXIvcVRCSHA0b1VqdHRFcFUwL3cyQmJsTk1VOTdyRXlQelczZGJ0N0hPRXUKZ0R5eXI0a3dhbmptS2ZpYWhvaXR4aGFabmRDbUoxYlFZYWVzQ0hwYkl3Rlp4T3g4UmptNWNSYWlUaGFmR0pIaQpHRDhxdyszcGFMRjQwcmxGRDBwWFh4Z0pqUUtCZ1FERVJDTFBQOWZGVXd0T0Rubm5YS2lwS3k0VFJFLzJDK1JhClBxdGlWZkFydUNYWTl4SmdFelBqbDhwSU9sTm1ITjdXM0srVGpNcWtnSG0yNjVFUWZ0Ym9IbDU2T0syT0NkTE0KaHpkZ3BJYWFhWVZ4OXVnTFUyUk5Ec1pGcVFDUjd2R0M1N3ovdmV1Tjc4ZHl4UlZoOUhrT2xTNWJJbTRXYml3ZQp5cTRSaFFpajBRS0JnUURlbytvL3ZNc3QrUWVvV2xtVUpJQ3lBY2pvck9kU0hSMnNOOXRZVndROC9Kb0V4WkdtCnRtdEJpR0cvcDFweEZZNG00aWFpQlZ1WkRnRVFEaXZzakh0Z3FCdmZZRHJFMXljWU9aejFmKzZTMjdYRFlidTcKaEQ3WlkzWlpRb2VjRHJWV1M5NGozdTdiM05jNi80aHFxYXlKMnJ6NnNsdlMxMVdkSzlselowcmVnUUtCZ1FDVwpBQjA2bUdpb2Z4ZWN5S09TbDlhdnREaTZzUE1MOFhyTkhpaU9OM0FmZWRZelJHSGUyODVFbTdZV0RiMi94VURxCnBpL3FiU2hUSVgza3Q1VmZMaEhCeGJRZlpVSC8xTEl2YndoNzdFS1RzU0kwUDZpSlAycmhHZkdmTzlNYnRhc1AKaVYyQmQvMlh0VEtTSE42Q3h2M2VqMVdtZ1dIeDhySDF0cUhpOGZId2dRS0JnUURraEVmUlpXcnlyWVBBYWk0VApRYkpjMmxlNi8yMEpDMWZEaVM4MVdSbVFmM2lBRm1TWFVzL2FpQTZUR3BGemowNTNyMWpERVI3S043SDlKVnJzCjMrTGMyRXNNSkIrRzdzUGd6S0dZVFFsdE0yM0tvN3p4Q095ODdLeTM5R3c0ZEhuTVVqWE9YZ1RKdTJXdld0Y1IKaG1VQ3Y4L1BhSWNiV28wWERXUllRTEtTUEE9PQotLS0tLUVORCBQUklWQVRFIEtFWS0tLS0tCg==
+kind: Secret
+metadata:
+  name: dex-tls
+type: kubernetes.io/tls
+---
+# Source: dex/charts/dex/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: dex
+  labels:
+    helm.sh/chart: dex-0.12.1
+    app.kubernetes.io/name: dex
+    app.kubernetes.io/instance: dex
+    app.kubernetes.io/version: "2.35.3"
+    app.kubernetes.io/managed-by: Helm
+rules:
+  - apiGroups: ["apiextensions.k8s.io"]
+    resources: ["customresourcedefinitions"]
+    verbs: ["list", "create"]
+---
+# Source: dex/charts/dex/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: dex-cluster
+  labels:
+    helm.sh/chart: dex-0.12.1
+    app.kubernetes.io/name: dex
+    app.kubernetes.io/instance: dex
+    app.kubernetes.io/version: "2.35.3"
+    app.kubernetes.io/managed-by: Helm
+roleRef:
+  kind: ClusterRole
+  apiGroup: rbac.authorization.k8s.io
+  name: dex
+subjects:
+- kind: ServiceAccount
+  namespace: authentication
+  name: dex
+---
+# Source: dex/charts/dex/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: dex
+  labels:
+    helm.sh/chart: dex-0.12.1
+    app.kubernetes.io/name: dex
+    app.kubernetes.io/instance: dex
+    app.kubernetes.io/version: "2.35.3"
+    app.kubernetes.io/managed-by: Helm
+rules:
+  - apiGroups: ["dex.coreos.com"]
+    resources: ["*"]
+    verbs: ["*"]
+---
+# Source: dex/charts/dex/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: dex
+  labels:
+    helm.sh/chart: dex-0.12.1
+    app.kubernetes.io/name: dex
+    app.kubernetes.io/instance: dex
+    app.kubernetes.io/version: "2.35.3"
+    app.kubernetes.io/managed-by: Helm
+roleRef:
+  kind: Role
+  apiGroup: rbac.authorization.k8s.io
+  name: dex  
+subjects:
+- kind: ServiceAccount
+  namespace: authentication
+  name: dex
+---
+# Source: dex/charts/dex/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: dex
+  labels:
+    helm.sh/chart: dex-0.12.1
+    app.kubernetes.io/name: dex
+    app.kubernetes.io/instance: dex
+    app.kubernetes.io/version: "2.35.3"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http
+      protocol: TCP
+      appProtocol: http
+    - name: https
+      port: 443
+      targetPort: https
+      protocol: TCP
+      appProtocol: https
+    - name: telemetry
+      port: 5558
+      targetPort: telemetry
+      protocol: TCP
+      appProtocol: http
+  selector:
+    app.kubernetes.io/name: dex
+    app.kubernetes.io/instance: dex
+---
+# Source: dex/charts/dex/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dex
+  labels:
+    helm.sh/chart: dex-0.12.1
+    app.kubernetes.io/name: dex
+    app.kubernetes.io/instance: dex
+    app.kubernetes.io/version: "2.35.3"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: dex
+      app.kubernetes.io/instance: dex
+  template:
+    metadata:
+      annotations:
+      
+        checksum/config: dfe43be49f0258684f490ddfeb334993c6659bef1a9901e2b8235c74d0804d99
+      labels:
+        app.kubernetes.io/name: dex
+        app.kubernetes.io/instance: dex
+    spec:
+      serviceAccountName: dex
+      securityContext:
+        fsGroup: 20000
+        runAsNonRoot: true
+      containers:
+        - name: dex
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsGroup: 10000
+            runAsUser: 10000
+          image: "ghcr.io/dexidp/dex:v2.35.3"
+          imagePullPolicy: IfNotPresent
+          args:
+            - dex
+            - serve
+            - --web-http-addr
+            - 0.0.0.0:5556
+            - --web-https-addr
+            - 0.0.0.0:5554
+            - --telemetry-addr
+            - 0.0.0.0:5558
+            - /etc/dex/config.yaml
+          env:
+          ports:
+            - name: http
+              containerPort: 5556
+              protocol: TCP
+            - name: https
+              containerPort: 5554
+              protocol: TCP
+            - name: telemetry
+              containerPort: 5558
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /healthz/live
+              port: telemetry
+          readinessProbe:
+            httpGet:
+              path: /healthz/ready
+              port: telemetry
+          resources:
+            limits:
+              cpu: 1
+              memory: 64Mi
+            requests:
+              cpu: 10m
+              memory: 32Mi
+          volumeMounts:
+            - name: config
+              mountPath: /etc/dex
+              readOnly: true
+            - mountPath: /etc/dex/tls
+              name: tls
+            - mountPath: /tmp
+              name: tmp
+      volumes:
+        - name: config
+          secret:
+            secretName: dex
+        - name: tls
+          secret:
+            secretName: dex-tls
+        - emptyDir:
+            medium: Memory
+          name: tmp
+---
+# Source: dex/charts/basic/templates/ingress-callback.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    # type of authentication
+    nginx.ingress.kubernetes.io/auth-type: basic
+    # name of the secret that contains the user/password definitions
+    nginx.ingress.kubernetes.io/auth-secret: dex-basic-secret
+    # message to display with an appropriate context why the authentication is required
+    nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required - foo'
+    # specific configuration to handle user group mapping
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      set_by_lua $remote_group '
+        ugm = {
+          ["admin"] = "readwrite",["foo"] = "Admin",["maintainer"] = "maintainer",["operator"] = "operator",["sysadmin"] = "sysadmin",["sysauditor"] = "sysauditor",
+        }
+        res = ugm[ngx.var.remote_user]
+        if (res == nil) then
+          return "none"
+        end
+        return res
+      ';
+
+      proxy_set_header X-Remote-User $remote_user;
+      proxy_set_header X-Remote-Group $remote_group;
+      # Remove potential Authorization header which conflict with forced authentication
+      proxy_set_header Authorization "";
+    nginx.ingress.kubernetes.io/limit-rps: "1"
+  name: dex-basic-callback
+spec:
+  rules:
+  - host: "auth.kast.wip"
+    http:
+      paths:
+      - backend:
+          service:
+            name: dex
+            port:
+              number: 8080
+        path: /auth/realms/kast/callback/login
+        pathType: Prefix
+---
+# Source: dex/charts/dex/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dex
+  labels:
+    helm.sh/chart: dex-0.12.1
+    app.kubernetes.io/name: dex
+    app.kubernetes.io/instance: dex
+    app.kubernetes.io/version: "2.35.3"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+    - host: "auth.kast.wip"
+      http:
+        paths:
+          - path: /auth/realms/kast
+            pathType: Prefix
+            backend:
+              service:
+                name: dex
+                port:
+                  number: 8080
