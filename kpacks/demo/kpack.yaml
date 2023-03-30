@@ -1,17 +1,60 @@
+manifest:
+  name: kpack_minimal
+  description: this is a stack that setup a minimal set of pre-configured consistent components for edge env.
+  version: 1.0.4
+  keywords:
+    - edge
+  annotations:
+    help: global.domain should be adapted to your need
 components:
-- name: keycloak
-  namespace: adhoc
-- name: keycloak
-  alias: second
-  namespace: external
+  - name: dex
+    namespace: authentication
+    version: 1.2.2+0.12.1
 
-# this is the global level
 global:
- pullPolicy: IfNotPresent
- domain: cluster.local
- registry: artifactory.thalesdigital.io
- registryPath: kast-project/
- oidc:
-  url: https://keycloak-http.iam.svc.cluster.local
- ingress:
-  adminClassName: nginx
+  pullPolicy: IfNotPresent
+  # -- you should change it
+  domain: &domain kast.wip
+  storageClassName: local-path
+  sso:
+    enabled: true
+    issuer:
+      path: /
+      external: https://auth.kast.wip/auth/realms/kast
+      internal: http://dex.authentication:8080/auth/realms/kast
+    # This self signd certificate is valid until 7 July 2023
+    # It should be a valid cert against KAST_OIDC_CA_FILE used during kast.sh execution
+    crt: &ssocrt |
+      {{ kget .global.crt }}
+
+dex:
+  _values:
+    passwords:
+      sysadmin: "{{ genPwd }}"
+      sysauditor: "{{ genPwd }}"
+      operator: "{{ genPwd }}"
+      maintainer: "{{ genPwd }}"
+  basicauth:
+    enabled: true
+    users:
+      # All the auth are bcrypted using `htpasswd -nbB -C 12 <<login>> <<password>>`
+      auths: |
+         sysadmin:{{ kget .authentication.dex.passwords.sysadmin | bcrypt }}
+         sysauditor:{{ kget .authentication.dex.passwords.sysauditor | bcrypt }}
+         operator:{{ kget .authentication.dex.passwords.operator | bcrypt }}
+         maintainer:{{ kget .authentication.dex.passwords.maintainer | bcrypt }}
+      # The mappings link each user to a specific group
+      mappings:
+        sysadmin: sysadmin
+        sysauditor: sysauditor
+        operator: operator
+        maintainer: maintainer
+  tls:
+    crt: *ssocrt
+    key: |
+      {{ kget .dex.crt }}
+  _install:
+    flags:
+      wait: true
+      wait-for-jobs: true
+      timeout: 30s
