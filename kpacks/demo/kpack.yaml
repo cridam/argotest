@@ -1,0 +1,17 @@
+components:
+- name: keycloak
+  namespace: adhoc
+- name: keycloak
+  alias: second
+  namespace: external
+
+# this is the global level
+global:
+ pullPolicy: IfNotPresent
+ domain: cluster.local
+ registry: artifactory.thalesdigital.io
+ registryPath: kast-project/
+ oidc:
+  url: https://keycloak-http.iam.svc.cluster.local
+ ingress:
+  adminClassName: nginx
