@@ -1,7 +1,3 @@
-a secure context detected on your platform, you must give a token
-if you know this secure context can be skipped, use --prompt=false
-Enter secure token:
----
 # Source: dex/charts/dex/templates/serviceaccount.yaml
 apiVersion: v1
 kind: ServiceAccount
