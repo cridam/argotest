@@ -7,7 +7,7 @@ manifest:
   annotations:
     help: global.domain should be adapted to your need
 components:
-  - name: dex-broken
+  - name: dex
     namespace: authentication
     version: 1.2.2+0.12.1
 
