@@ -1,0 +1,44 @@
+---
+# Source: model/templates/secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: demo
+  namespace: default
+  labels:
+    app.kubernetes.io/managed-by: kastctl
+    kpack: demo
+#   helm.sh/resource-policy: keep
+type: Opaque
+data:
+  kpack.yaml: bWFuaWZlc3Q6CiAgbmFtZTogZGVtbwogIGRlc2NyaXB0aW9uOiBrcGFjayBkZW1vIGZvciBjcmQKICB2ZXJzaW9uOiAxLjAuNAogIGtleXdvcmRzOgogICAgLSBvcGVyYXRvcgogIGFubm90YXRpb25zOgogICAgaGVscDogZ2xvYmFsLmRvbWFpbiBzaG91bGQgYmUgYWRhcHRlZCB0byB5b3VyIG5lZWQKY29tcG9uZW50czoKLSBuYW1lOiBpbmdyZXNzCiAgdmVyc2lvbjogMi4yLjIrNC41LjIKICBuYW1lc3BhY2U6IHRlc3QKLSBuYW1lOiBncmFmYW5hCiAgbmFtZXNwYWNlOiB0ZXN0CiAgdmVyc2lvbjogMi4yLjIrNi41MS4xCm1ldGFkYXRhOgogIHRlc3Q6IGh0dHBzOi8vZ3JhZmFuYS5hZG1pbi5sb2NhbGhvc3Q6ODA4MC9oZWxsbwogIGluZm86IHwKICAgYWRkIGdyYWZhbmEuYWRtaW4uaG9zdCB0byAvZXRjL2hvc3RzCiAgIGt1YmVjdGwgcG9ydC1mb3J3YXJkIC1uIHRlc3QgJChrdWJlY3RsIGdldCBwb2RzIC1uIHRlc3QgLW8gbmFtZSAtbCAgYXBwLmt1YmVybmV0ZXMuaW8vY29tcG9uZW50PWNvbnRyb2xsZXIpIDgwODA6NDQzCmdsb2JhbDoKICBkb21haW46ICFlbnYgRE9NQUlOCmdyYWZhbmE6CiAgX3ZhbHVlczoKICAgZ3JhZmFuYToKICAgIGluZ3Jlc3M6CiAgICAgIGFubm90YXRpb25zOgogICAgICAgICBuZ2lueC5pbmdyZXNzLmt1YmVybmV0ZXMuaW8vZW5hYmxlLW1vZHNlY3VyaXR5OiAidHJ1ZSIKICAgICAgICAgbmdpbnguaW5ncmVzcy5rdWJlcm5ldGVzLmlvL21vZHNlY3VyaXR5LXNuaXBwZXQ6IHwKICAgICAgICAgIFNlY1J1bGVFbmdpbmUgT24KICAgICAgICAgIFNlY1J1bGUgUkVRVUVTVF9VUkkgIkBjb250YWlucyBoZWxsbyIgImlkOjEyMzQ1LHBoYXNlOjIsZGVueSxzdGF0dXM6NDAzLG1zZzpcJ1VSTCBjb250YWlucyBoZWxsb1wnIgo=
+---
+# Source: model/templates/kpack-cr.yaml
+apiVersion: kast.thales.io/v1alpha1
+kind: Kpack
+metadata:
+  name: demo
+  namespace: default
+  finalizers: 
+  - thalesgroup.com/finalizer
+  labels:
+    kpack: demo
+spec:
+  # required only if name differs
+  #secret: demo
+  conf:
+    generator:
+     min: 8
+     max: 10
+     specialChars: "~!@#$%!(BADWIDTH)%!_(MISSING)"
+    template:
+     disableEnvRequired: true
+    retry:
+     cond:
+     -  "because it is being terminated"
+  opts:
+    alias: "kast"
+    args:
+  env:
+    HELM_MAX_HISTORY: "4"
+    DOMAIN: "localhost"
