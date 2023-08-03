@@ -1,60 +1,31 @@
 manifest:
-  name: kpack_minimal
-  description: this is a stack that setup a minimal set of pre-configured consistent components for edge env.
+  name: demo
+  description: kpack demo for crd
   version: 1.0.4
   keywords:
-    - edge
+    - operator
   annotations:
     help: global.domain should be adapted to your need
 components:
-  - name: dex
-    namespace: authentication
-    version: 1.2.2+0.12.1
-
+- name: ingress
+  version: 2.2.2+4.5.2
+  namespace: test
+- name: grafana
+  namespace: test
+  version: 2.2.2+6.51.1
+metadata:
+  test: https://grafana.admin.localhost:8080/hello
+  info: |
+   add grafana.admin.host to /etc/hosts
+   kubectl port-forward -n test $(kubectl get pods -n test -o name -l  app.kubernetes.io/component=controller) 8080:443
 global:
-  pullPolicy: IfNotPresent
-  # -- you should change it
-  domain: &domain kast.wip
-  storageClassName: local-path
-  sso:
-    enabled: true
-    issuer:
-      path: /
-      external: https://auth.kast.wip/auth/realms/kast
-      internal: http://dex.authentication:8080/auth/realms/kast
-    # This self signd certificate is valid until 7 July 2023
-    # It should be a valid cert against KAST_OIDC_CA_FILE used during kast.sh execution
-    crt: &ssocrt |
-      {{ kget .global.crt }}
-
-dex:
+  domain: !env DOMAIN
+grafana:
   _values:
-    passwords:
-      sysadmin: "{{ genPwd }}"
-      sysauditor: "{{ genPwd }}"
-      operator: "{{ genPwd }}"
-      maintainer: "{{ genPwd }}"
-  basicauth:
-    enabled: true
-    users:
-      # All the auth are bcrypted using `htpasswd -nbB -C 12 <<login>> <<password>>`
-      auths: |
-         sysadmin:{{ kget .authentication.dex.passwords.sysadmin | bcrypt }}
-         sysauditor:{{ kget .authentication.dex.passwords.sysauditor | bcrypt }}
-         operator:{{ kget .authentication.dex.passwords.operator | bcrypt }}
-         maintainer:{{ kget .authentication.dex.passwords.maintainer | bcrypt }}
-      # The mappings link each user to a specific group
-      mappings:
-        sysadmin: sysadmin
-        sysauditor: sysauditor
-        operator: operator
-        maintainer: maintainer
-  tls:
-    crt: *ssocrt
-    key: |
-      {{ kget .dex.crt }}
-  _install:
-    flags:
-      wait: true
-      wait-for-jobs: true
-      timeout: 30s
+   grafana:
+    ingress:
+      annotations:
+         nginx.ingress.kubernetes.io/enable-modsecurity: "true"
+         nginx.ingress.kubernetes.io/modsecurity-snippet: |
+          SecRuleEngine On
+          SecRule REQUEST_URI "@contains hello" "id:12345,phase:2,deny,status:403,msg:\'URL contains hello\'"
