@@ -39,6 +39,7 @@ spec:
      -  "because it is being terminated"
   opts:
     alias: "kast"
+    cred: ""
     args:
   env:
     HELM_MAX_HISTORY: "4"
