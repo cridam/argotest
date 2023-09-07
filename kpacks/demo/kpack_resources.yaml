@@ -43,3 +43,4 @@ spec:
   env:
     HELM_MAX_HISTORY: "4"
     DOMAIN: "localhost"
+    DEBUG: "true"
