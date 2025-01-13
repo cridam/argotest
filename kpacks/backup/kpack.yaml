@@ -5,7 +5,7 @@ manifest:
   keywords:
     - operator
 components:
-- name: ingress
-  version: 2.2.2+4.5.2
+- name: gatekeeper
+  version: "1.9.0+3.17.1"
   namespace: test-operator
 
