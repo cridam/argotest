@@ -4,28 +4,8 @@ manifest:
   version: 1.0.4
   keywords:
     - operator
-  annotations:
-    help: global.domain should be adapted to your need
-  test: 
-   https://grafana.admin.localhost:8080/hello
-  info: |
-   add grafana.admin.host to /etc/hosts
-   kubectl port-forward -n test $(kubectl get pods -n test -o name -l  app.kubernetes.io/component=controller) 8080:443
 components:
 - name: ingress
   version: 2.2.2+4.5.2
   namespace: test
-- name: grafana
-  namespace: test
-  version: 2.2.2+6.51.1
-global:
-  domain: !env DOMAIN
-grafana:
-  _values:
-   grafana:
-    ingress:
-      annotations:
-         nginx.ingress.kubernetes.io/enable-modsecurity: "true"
-         nginx.ingress.kubernetes.io/modsecurity-snippet: |
-          SecRuleEngine On
-          SecRule REQUEST_URI "@contains hello" "id:12345,phase:2,deny,status:403,msg:\'URL contains hello\'"
+
