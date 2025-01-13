@@ -1,5 +1,5 @@
 manifest:
-  name: demo
+  name: test-operator
   description: kpack demo for crd
   version: 1.0.4
   keywords:
@@ -7,5 +7,5 @@ manifest:
 components:
 - name: ingress
   version: 2.2.2+4.5.2
-  namespace: test
+  namespace: test-operator
 
